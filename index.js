@@ -22,6 +22,7 @@ async function run() {
         const database = client.db('blood-buddies');
         const bloodPostReqCollection = database.collection('bloodPostReq');
         const usersCollection = database.collection('userInfo');
+        const reviewCollection = database.collection('review');
 
 
         //Blood Get Api
@@ -63,6 +64,30 @@ async function run() {
             const updateDoc = { $set: user };
             const result = await usersCollection.updateOne(filter, updateDoc, options);
             res.json(result);
+        })
+
+        //Post add Reviews
+        app.post("/addReviews", (req, res) => {
+
+            reviewCollection.insertOne(req.body).then((documents) => {
+                res.send(documents.insertedId);
+            });
+        });
+
+        //Post add Reviews
+        app.post("/addReviews", (req, res) => {
+
+            reviewCollection.insertOne(req.body).then((documents) => {
+                res.send(documents.insertedId);
+            });
+        });
+
+        //GET  Reviews API
+        app.get('/addReviews', async (req, res) => {
+            const cursor = reviewCollection.find({});
+            const events = await cursor.toArray();
+
+            res.send(events);
         })
 
 
