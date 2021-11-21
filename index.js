@@ -21,6 +21,7 @@ async function run() {
 
         const database = client.db('blood-buddies');
         const bloodPostReqCollection = database.collection('bloodPostReq');
+        const usersCollection = database.collection('userInfo');
 
 
         //Blood Get Api
@@ -35,11 +36,10 @@ async function run() {
         app.post('/bloodPostReq', async (req, res) => {
             const bloodPostReq = req.body;
             const result = await bloodPostReqCollection.insertOne(bloodPostReq);
-            console.log(bloodPostReq);
             res.json(result)
         })
 
-        //Blood Get Api
+        //Blood Get Api email search
         app.get('/bloodPostReqDashboard', async (req, res) => {
             const email = req.query.email;
             const query = { email: email }
@@ -47,6 +47,24 @@ async function run() {
             const bloodPostReq = await cursor.toArray();
             res.send(bloodPostReq);
         })
+
+        //User Sign up POST Api
+        app.post('/userInfo', async (req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            res.json(result);
+        })
+
+        //User google sign in  PUT/Upsert Api
+        app.put('/userInfo', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email }
+            const options = { upsert: true };
+            const updateDoc = { $set: user };
+            const result = await usersCollection.updateOne(filter, updateDoc, options);
+            res.json(result);
+        })
+
 
     } finally {
         //await client.close();
