@@ -66,9 +66,17 @@ async function run() {
             res.json(result);
         })
 
+        //Users  Make Admin
+        app.put('/userInfo/admin', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email }
+            const updateDoc = { $set: { role: 'admin' } };
+            const result = await usersCollection.updateOne(filter, updateDoc);
+            res.json(result);
+        })
+
         //Post add Reviews
         app.post("/addReviews", (req, res) => {
-
             reviewCollection.insertOne(req.body).then((documents) => {
                 res.send(documents.insertedId);
             });
@@ -88,7 +96,7 @@ async function run() {
             const events = await cursor.toArray();
 
             res.send(events);
-        })
+        });
 
 
     } finally {
