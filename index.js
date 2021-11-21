@@ -3,6 +3,7 @@ const app = express()
 const cors = require('cors');
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
+const { query } = require('express');
 
 const port = process.env.PORT || 5000;
 
@@ -36,6 +37,15 @@ async function run() {
             const result = await bloodPostReqCollection.insertOne(bloodPostReq);
             console.log(bloodPostReq);
             res.json(result)
+        })
+
+        //Blood Get Api
+        app.get('/bloodPostReqDashboard', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email }
+            const cursor = bloodPostReqCollection.find(query);
+            const bloodPostReq = await cursor.toArray();
+            res.send(bloodPostReq);
         })
 
     } finally {
