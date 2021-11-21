@@ -49,6 +49,18 @@ async function run() {
             res.send(bloodPostReq);
         })
 
+        //find user admin by email
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await usersCollection.findOne(query);
+            let isAdmin = false;
+            if (user?.role === 'admin') {
+                isAdmin = true;
+            }
+            res.json({ admin: isAdmin });
+        })
+
         //User Sign up POST Api
         app.post('/userInfo', async (req, res) => {
             const user = req.body;
