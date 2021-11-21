@@ -4,6 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
 const { query } = require('express');
+const ObjectId = require('mongodb').ObjectId;
 
 const port = process.env.PORT || 5000;
 
@@ -30,6 +31,15 @@ async function run() {
             const cursor = bloodPostReqCollection.find({});
             const bloodPostReq = await cursor.toArray();
             res.send(bloodPostReq);
+        })
+
+
+        //Blood DELETE Api
+        app.delete('/bloodPostReq/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await bloodPostReqCollection.deleteOne(query);
+            res.send(result);
         })
 
 
